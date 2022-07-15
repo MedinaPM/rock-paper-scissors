@@ -25,33 +25,63 @@ function userPlay() {
   }
 }
 
-function playRound() {
-  let playerSelection = userPlay();
+function playRound(e) {
+  let playerSelection = e.target.innerHTML;
   let computerSelection = computerPlay();
+  let result = "";
+  let container = document.querySelector("div#results");
+  let content = document.createElement('p');
 
   switch (true) {
     //when both selections are the same
     case ((playerSelection === "Rock") && (computerSelection === "Rock")):
-      return "That's a tie! " + playerSelection + " vs " + computerSelection;
+      result = "That's a tie! " + playerSelection + " vs " + computerSelection;
+      content.textContent = result;
+      container.appendChild(content);
+      return console.log(result);
     case ((playerSelection === "Paper") && (computerSelection === "Paper")):
-      return "That's a tie! " + playerSelection + " vs " + computerSelection;
+      result = "That's a tie! " + playerSelection + " vs " + computerSelection;
+      content.textContent = result;
+      container.appendChild(content);
+      return console.log(result);
     case ((playerSelection === "Scissors") && (computerSelection === "Scissors")):
-      return "That's a tie! " + playerSelection + " vs " + computerSelection;
+      result = "That's a tie! " + playerSelection + " vs " + computerSelection;
+      content.textContent = result;
+      container.appendChild(content);
+      return console.log(result);
     //when player selection is rock
     case ((playerSelection === "Rock") && (computerSelection === "Paper")):
-      return "You've lost! " + computerSelection + " beats " + playerSelection;
+      result = "You've lost! " + computerSelection + " beats " + playerSelection;
+      content.textContent = result;
+      container.appendChild(content);
+      return console.log(result);
     case ((playerSelection === "Rock") && (computerSelection === "Scissors")):
-      return "You've won! " + playerSelection + " beats " + computerSelection;
+      result = "You've won! " + playerSelection + " beats " + computerSelection;
+      content.textContent = result;
+      container.appendChild(content);
+      return console.log(result);
     //when player selection is paper
     case ((playerSelection === "Paper") && (computerSelection === "Scissors")):
-      return "You've lost! " + computerSelection + " beats " + playerSelection;
+      result = "You've lost! " + computerSelection + " beats " + playerSelection;
+      content.textContent = result;
+      container.appendChild(content);
+      return console.log(result);
     case ((playerSelection === "Paper") && (computerSelection === "Rock")):
-      return "You've won! " + playerSelection + " beats " + computerSelection;
+      result = "You've won! " + playerSelection + " beats " + computerSelection;
+      content.textContent = result;
+      container.appendChild(content);
+      return console.log(result);
     //when player selection is scissors
     case ((playerSelection === "Scissors") && (computerSelection === "Rock")):
-      return "You've lost! " + computerSelection + " beats " + playerSelection;
+      result = "You've lost! " + computerSelection + " beats " + playerSelection;
+      content.textContent = result;
+      container.appendChild(content);
+      return console.log(result);
     case ((playerSelection === "Scissors") && (computerSelection === "Paper")):
-      return "You've won! " + playerSelection + " beats " + computerSelection;
+      result = "You've won! " + playerSelection + " beats " + computerSelection;
+      content.textContent = result;
+      container.appendChild(content);
+      return console.log(result);
   }
 }
 
@@ -90,4 +120,6 @@ function game() {
   }
 }
 
-console.log(game());
+document.querySelector("button#rock").addEventListener("click", playRound);
+document.querySelector("button#paper").addEventListener("click", playRound);
+document.querySelector("button#scissors").addEventListener("click", playRound);
