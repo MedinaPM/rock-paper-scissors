@@ -1,135 +1,97 @@
-function computerPlay() {
-  let ranNum = Math.random();
-
-  if (ranNum <= (1/3)) {
-    return "Rock";
-  } else if(ranNum <= (2/3)) {
-    return "Paper";
-  } else {
-    return "Scissors";
-  }
+//buttons handling
+const BUTTONS = document.querySelectorAll('button');
+BUTTONS.forEach(button => button.addEventListener('click', function(){playGame(button.value)}));
+//
+function buttonDisable() {
+  BUTTONS.forEach(button => button.disabled = true);
 }
 
-function userPlay() {
-  let userChoice = prompt("Select Rock, Paper, or Scissors");
-
-  if (userChoice.toUpperCase() === "ROCK") {
-    return "Rock";
-  } else if (userChoice.toUpperCase() === "PAPER") {
-    return "Paper";
-  } else if (userChoice.toUpperCase() === "SCISSORS") {
-    return "Scissors";
-  } else {
-    alert("Check your spelling!");
-    return userPlay();
-  }
-}
-
-function playRound(rps) {
-  let playerSelection = rps;
-  let computerSelection = computerPlay();
-  let result = "";
-  let container = document.querySelector("div#results");
+//display handling
+function roundDisp(dispR) { 
   let content = document.createElement('p');
+  content.textContent = dispR;
+  document.querySelector('div#results').appendChild(content);
+}
+//
+function scoreDisp(dispS) {
+  let container = document.querySelector('div#scores');
+  let old = document.querySelector('p.scoreText');
+  container.removeChild(old);
+  let content = document.createElement('p');
+  content.classList.add('scoreText');
+  content.textContent = dispS;
+  container.appendChild(content);
+}
+//
+function checkScores() {
+  let finalScore;
 
   switch (true) {
-    //when both selections are the same
-    case ((playerSelection === "Rock") && (computerSelection === "Rock")):
-      result = "That's a tie! " + playerSelection + " vs " + computerSelection;
-      content.textContent = result;
-      container.appendChild(content);
-      return result;
-    case ((playerSelection === "Paper") && (computerSelection === "Paper")):
-      result = "That's a tie! " + playerSelection + " vs " + computerSelection;
-      content.textContent = result;
-      container.appendChild(content);
-      return result;
-    case ((playerSelection === "Scissors") && (computerSelection === "Scissors")):
-      result = "That's a tie! " + playerSelection + " vs " + computerSelection;
-      content.textContent = result;
-      container.appendChild(content);
-      return result;
-    //when player selection is rock
-    case ((playerSelection === "Rock") && (computerSelection === "Paper")):
-      result = "You've lost! " + computerSelection + " beats " + playerSelection;
-      content.textContent = result;
-      container.appendChild(content);
-      return result;
-    case ((playerSelection === "Rock") && (computerSelection === "Scissors")):
-      result = "You've won! " + playerSelection + " beats " + computerSelection;
-      content.textContent = result;
-      container.appendChild(content);
-      return result;
-    //when player selection is paper
-    case ((playerSelection === "Paper") && (computerSelection === "Scissors")):
-      result = "You've lost! " + computerSelection + " beats " + playerSelection;
-      content.textContent = result;
-      container.appendChild(content);
-      return result;
-    case ((playerSelection === "Paper") && (computerSelection === "Rock")):
-      result = "You've won! " + playerSelection + " beats " + computerSelection;
-      content.textContent = result;
-      container.appendChild(content);
-      return result;
-    //when player selection is scissors
-    case ((playerSelection === "Scissors") && (computerSelection === "Rock")):
-      result = "You've lost! " + computerSelection + " beats " + playerSelection;
-      content.textContent = result;
-      container.appendChild(content);
-      return result;
-    case ((playerSelection === "Scissors") && (computerSelection === "Paper")):
-      result = "You've won! " + playerSelection + " beats " + computerSelection;
-      content.textContent = result;
-      container.appendChild(content);
-      return result;
+    case (compScore === 5 && playerScore < 5):
+      finalScore = "You have lost! Better luck next time.";
+      buttonDisable();
+      endGame(finalScore);
+      break;
+    case (playerScore === 5 && compScore < 5):
+      finalScore = "Congratulations! You have won!";
+      endGame(finalScore);
+      buttonDisable();
+      break;
   }
 }
-
-function game(e) {
-  roundResult = playRound(e.target.innerHTML);
-  let str = roundResult.slice(0, 10);
-  let d = document.querySelector("div#scores");
-  let dNested = document.querySelector("p.sText");
-  d.removeChild(dNested);
+//
+function endGame(dispFS) {
   let content = document.createElement('p');
-  content.classList.add('sText');
-  let result = "";
+  content.textContent = dispFS;
+  document.querySelector('div#scores').appendChild(content);
+}
 
-  if (str === "That's a t") {
-    playerScore++;
-    compScore++;
-    result = ("Round " + roundNum + ": Player [" + playerScore + "] Computer [" + compScore + "]");
-    roundNum++;
-  } else if (str === "You've won") {
-    playerScore++;
-    result = ("Round " + roundNum + ": Player [" + playerScore + "] Computer [" + compScore + "]");
-    roundNum++;
-  } else {
-    compScore++;
-    result = ("Round " + roundNum + ": Player [" + playerScore + "] Computer [" + compScore + "]");
-    roundNum++;
+//game setup
+let compScore = 0;
+let playerScore = 0;
+let roundNum = 0;
+
+//computer ramdom play
+function computerPlay() {
+  let options = ['rock', 'paper', 'scissors'];
+  return options[Math.floor(Math.random() * options.length)]
+}
+
+//main game
+function playGame(usrPlay) {
+  let comPlay = computerPlay();
+  let roundScore = '';
+  let gameScore = '';
+
+  switch (true) {
+    //player win scenarios
+    case (usrPlay === 'rock') && (comPlay === 'scissors'):
+    case (usrPlay === 'paper') && (comPlay === 'rock'):
+    case (usrPlay === 'scissors') && (comPlay === 'paper'):
+      roundScore = "You've won! " + usrPlay + " beats " + comPlay;
+      roundNum++;
+      playerScore++;
+      break;
+
+    //computer win scenarios
+    case (usrPlay === 'rock') && (comPlay === 'paper'):
+    case (usrPlay === 'paper') && (comPlay === 'scissors'):
+    case (usrPlay === 'scissors') && (comPlay === 'rock'):
+      roundScore = "You've lost! " + comPlay + " beats " + usrPlay;
+      roundNum++;
+      compScore++;
+      break;
+
+    //tie scenario
+    case (usrPlay === comPlay):
+      roundScore = "That's a tie! " + usrPlay + " vs " + comPlay;
+      roundNum++;
+      break;
   }
 
-  content.textContent = result;
-  d.appendChild(content);
+  //common operations for all scenarios
+  gameScore = "Round " + roundNum + ": Player [" + playerScore + "] Computer [" + compScore + "]";
+  roundDisp(roundScore);
+  scoreDisp(gameScore);
   checkScores();
 }
-
-function checkScores() {
-  if (playerScore === 5 && compScore === 5) {
-    alert("That's a tie!");
-  } else if (compScore === 5 && playerScore < 5) {
-    alert("You have lost! Better luck next time.");
-  } else if (playerScore === 5 && compScore < 5) {
-    alert("Congratulations! You have won!");
-  }
-}
-
-let playerScore = 0;
-let compScore = 0;
-let roundResult = "";
-let roundNum = 1;
-
-document.querySelector("button#rock").addEventListener("click", game);
-document.querySelector("button#paper").addEventListener("click", game);
-document.querySelector("button#scissors").addEventListener("click", game);
